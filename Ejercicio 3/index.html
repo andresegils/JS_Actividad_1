@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejercicio 3 Javascript</title>
+    <script>
+        var estudiantes = [];
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            var A = document.getElementById("cedula").value;
+            var B = document.getElementById("nombre").value;
+            var C = parseFloat(document.getElementById("notaMatematicas").value);
+            var D = parseFloat(document.getElementById("notaFisica").value);
+            var E = parseFloat(document.getElementById("notaProgramacion").value);
+
+            estudiantes.push({
+                cedula: A,
+                nombre: B,
+                notaMatematicas: C,
+                notaFisica: D,
+                notaProgramacion: E,
+                aproboMatematicas: C >= 3.0,
+                aproboFisica: D >= 3.0,
+                aproboProgramacion: E >= 3.0,
+                materiasAprobadas: (C >= 3.0 ? 1 : 0) + (D >= 3.0 ? 1 : 0) + (E >= 3.0 ? 1 : 0)
+            });
+
+            document.getElementById("form").reset();
+        }
+
+        function showStats() {
+            var numeroEstudiantes = estudiantes.length;
+
+            var promedioMatematicas = estudiantes.map(est => est.notaMatematicas).reduce((a, b) => a + b) / numeroEstudiantes;
+            var promedioFisica = estudiantes.map(est => est.notaFisica).reduce((a, b) => a + b) / numeroEstudiantes;
+            var promedioProgramacion = estudiantes.map(est => est.notaProgramacion).reduce((a, b) => a + b) / numeroEstudiantes;
+
+            var aprobadosMatematicas = estudiantes.filter(est => est.aproboMatematicas).length;
+            var aprobadosFisica = estudiantes.filter(est => est.aproboFisica).length;
+            var aprobadosProgramacion = estudiantes.filter(est => est.aproboProgramacion).length;
+
+            var aplazadosMatematicas = estudiantes.filter(est => !est.aproboMatematicas).length;
+            var aplazadosFisica = estudiantes.filter(est => !est.aproboFisica).length;
+            var aplazadosProgramacion = estudiantes.filter(est => !est.aproboProgramacion).length;
+
+            var aprobadosTodas = estudiantes.filter(est => est.materiasAprobadas === 3).length;
+            var aprobadosUna = estudiantes.filter(est => est.materiasAprobadas === 1).length;
+            var aprobadosDos = estudiantes.filter(est => est.materiasAprobadas === 2).length;
+
+            var maxNotaMatematicas = Math.max(...estudiantes.map(est => est.notaMatematicas));
+            var maxNotaFisica = Math.max(...estudiantes.map(est => est.notaFisica));
+            var maxNotaProgramacion = Math.max(...estudiantes.map(est => est.notaProgramacion));
+
+            var statsDiv = document.getElementById("stats");
+
+            statsDiv.innerHTML = `
+                Promedio Matemáticas: ${promedioMatematicas.toFixed(2)} <br/>
+                Promedio Física: ${promedioFisica.toFixed(2)} <br/>
+                Promedio Programación: ${promedioProgramacion.toFixed(2)} <br/>
+                Aprobados Matemáticas: ${aprobadosMatematicas} <br/>
+                Aprobados Física: ${aprobadosFisica} <br/>
+                Aprobados Programación: ${aprobadosProgramacion} <br/>
+                Aplazados Matemáticas: ${aplazadosMatematicas} <br/>
+                Aplazados Física: ${aplazadosFisica} <br/>
+                Aplazados Programación: ${aplazadosProgramacion} <br/>
+                Aprobaron todas las materias: ${aprobadosTodas} <br/>
+                Aprobaron una sola materia: ${aprobadosUna} <br/>
+                Aprobaron dos materias: ${aprobadosDos} <br/>
+                Nota máxima en Matemáticas: ${maxNotaMatematicas} <br/>
+                Nota máxima en Física: ${maxNotaFisica} <br/>
+                Nota máxima en Programación: ${maxNotaProgramacion}
+            `;
+        }
+    </script>
+</head>
+<body>
+    <form id="form" onsubmit="submitForm(event)">
+        Cédula: <input type="text" id="cedula" required> <br/>
+        Nombre: <input type="text" id="nombre" required> <br/>
+        Nota de Matemáticas: <input type="number" id="notaMatematicas" min="0" max="20" step="1" required> <br/>
+        Nota de Física: <input type="number" id="notaFisica" min="0" max="20" step="1" required> <br/>
+        Nota de Programación: <input type="number" id="notaProgramacion" min="0" max="20" step="1" required> <br/>
+        <input type="submit" value="Agregar estudiante">
+    </form>
+    <button onclick="showStats()">Mostrar estadísticas</button>
+    <div id="stats"></div>
+</body>
+</html>

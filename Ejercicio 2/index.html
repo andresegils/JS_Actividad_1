@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Calculadora de interés de cuenta de ahorros</h2>
+
+<form id="interesForm">
+  <label for="monto">Monto inicial:</label><br>
+  <input type="number" id="monto" name="monto" value="1000"><br>
+  <input type="submit" value="Calcular Interés">
+</form>
+
+<p id="resultado"></p>
+
+<script>
+document.getElementById("interesForm").addEventListener("submit", function(event){
+  event.preventDefault();
+
+  var montoInicial = document.getElementById("monto").value;
+  montoInicial = parseFloat(montoInicial);
+  
+  var montoActual = montoInicial;
+  var interesAnual = 0.15;
+  var interesMensual = interesAnual / 12;
+  var depositoMensual = 250.00;
+  
+  for (var i = 0; i < 12; i++) {
+      montoActual += depositoMensual;
+      montoActual += montoActual * interesMensual;
+  }
+
+  var interes = montoActual - montoInicial;
+  
+  document.getElementById("resultado").innerHTML = "El interés acumulado al final del año es: " + interes.toFixed(2) + " Bs.";
+});
+</script>
+
+</body>
+</html>
